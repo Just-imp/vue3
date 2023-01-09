@@ -1,4 +1,4 @@
 declare module '@vue3/shared' {
-    const content: { Shared }
+    const content: { isObject,isString }
     export = content
 }

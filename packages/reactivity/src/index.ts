@@ -1,9 +1,7 @@
-import {Shared} from '@vue3/shared';
-const Reactivity = {
-    say: ():void => {
-        console.log('sss',Shared);
-    }
-}
+import {reactive,shallowReactive,readonly,shallowReadonly} from './reactive';
 export {
-    Reactivity
+    reactive,
+    readonly,
+    shallowReactive,
+    shallowReadonly,
 }

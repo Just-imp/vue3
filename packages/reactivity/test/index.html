@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <script src="../dist/reactivity.global.js"></script>
+    <script>
+        const { reactive, shallowReactive, readonly, shallowReadonly } = VueReactivity
+        
+        const p1 = reactive({a:1,b:2,c:3})
+
+        const p2 = reactive({a:{cc:'msg',id:'oppp',fn:()=>{console.log('this is a proxy Fn');}}})
+
+        const r1 =readonly({a:1,b:{dd:66}})
+
+        const r2 = shallowReadonly({a:1,b:{c:2}})
+        
+        console.log(p1,p2.a);
+
+        r1.a = 3 //throw a warn
+        
+        r1.b.dd = 3 //throw a warn
+
+        r2.b.c = 55 //successful
+
+        r2.a = 22 // throw a warn 
+
+        console.log(r1,r2);
+    </script>
 </body>
+
 </html>
