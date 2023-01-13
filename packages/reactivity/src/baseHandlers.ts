@@ -1,5 +1,8 @@
 //处理各种proxy的handler
 import { isObject } from '@vue3/shared';
+import { hasChange, hasOwn, isArray, isIntegerKey } from '../../shared/src/index';
+import { track, trigger } from './effect';
+import { TrackOpTypes, TriggerOpTypes } from './operators';
 import { reactive, readonly } from './reactive';
 const get = createGetter()
 
@@ -25,12 +28,12 @@ export const readonlyHandler: ProxyHandler<any> = {
 
 export const mutableHandler = {
     get: get,
-    set:createSetter(false)
+    set: createSetter(false)
 }
 
 export const shallowReactiveHandle = {
     get: shallowGet,
-    set:createSetter(true)
+    set: createSetter(true)
 }
 
 export const shallowReadonlyHandle = {
@@ -44,6 +47,7 @@ function createGetter(isReadOnly = false, shallow = false) {
 
         if (!isReadOnly) {
             //进行依赖收集
+            track(target, TrackOpTypes, props)
         }
 
         if (shallow) {
@@ -59,8 +63,20 @@ function createGetter(isReadOnly = false, shallow = false) {
 }
 
 function createSetter(shallow = false) {
-    return (target: object, props: string | symbol, newVal:unknown,receiver: object)=>{
-        const res = Reflect.set(target,props,newVal)
+    return function set(target: object, props: string | symbol, newVal: unknown, receiver: object) {
+        console.log('set:', target, props, newVal);
+        const oldVal = target[props]
+
+        let hadKey: boolean = isArray(target) && isIntegerKey(props) ? Number(target.length) > Number(props) : hasOwn(target, props)
+        
+        if (!hadKey) {
+            trigger(target, TriggerOpTypes.SET, props, newVal)
+        } else if (hasChange(newVal, oldVal)) {
+            trigger(target, TriggerOpTypes.ADD, props, newVal, oldVal)
+        }
+
+        const res = Reflect.set(target, props, newVal, receiver)
+
         return res
     }
 }

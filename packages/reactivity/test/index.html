@@ -9,29 +9,24 @@
 </head>
 
 <body>
+    <div class="app" id="app"></div>
     <script src="../dist/reactivity.global.js"></script>
     <script>
-        const { reactive, shallowReactive, readonly, shallowReadonly } = VueReactivity
+        const { reactive, shallowReactive, readonly, shallowReadonly,effect } = VueReactivity
         
-        const p1 = reactive({a:1,b:2,c:3})
+        const p1 = reactive({name:'wangyh',age:18,arr:[2,2,3,5,7]})
 
-        const p2 = reactive({a:{cc:'msg',id:'oppp',fn:()=>{console.log('this is a proxy Fn');}}})
-
-        const r1 =readonly({a:1,b:{dd:66}})
-
-        const r2 = shallowReadonly({a:1,b:{c:2}})
+        console.log(p1);
+        effect(()=>{
+            //const app = document.getElementById('app')
+            app.innerHTML = p1.arr
+        })
         
-        console.log(p1,p2.a);
+        setTimeout(() => {
+            p1.arr.splice(4,1)
+            console.log(p1.arr);
+        }, 1000);
 
-        r1.a = 3 //throw a warn
-        
-        r1.b.dd = 3 //throw a warn
-
-        r2.b.c = 55 //successful
-
-        r2.a = 22 // throw a warn 
-
-        console.log(r1,r2);
     </script>
 </body>
 
