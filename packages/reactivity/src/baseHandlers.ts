@@ -47,7 +47,7 @@ function createGetter(isReadOnly = false, shallow = false) {
 
         if (!isReadOnly) {
             //进行依赖收集
-            track(target, TrackOpTypes, props)
+            track(target, TrackOpTypes.GET, props)
         }
 
         if (shallow) {

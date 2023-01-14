@@ -57,7 +57,7 @@ function createReactiveEffect(depens: Function, options: effectOptionType): Func
 
 const targetMap: WeakMap<any, any> = new WeakMap()
 
-export function track(target: object, type: object, key: string | symbol) {
+export function track(target: object, type: number, key: string | symbol) {
     if (activeEffect === undefined) {
         return
     }
