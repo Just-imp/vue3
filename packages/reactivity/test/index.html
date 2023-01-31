@@ -6,15 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #app {
+            font-size: 16px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <div class="app" id="app"></div>
     <script src="../dist/reactivity.global.js"></script>
     <script>
-        const { reactive, shallowReactive, readonly, shallowReadonly,effect } = VueReactivity
-        
-        const p1 = reactive({name:'wangyh',age:18,arr:[2,2,3,5,7]})
+        const { reactive, shallowReactive, readonly, shallowReadonly, effect, ref } = VueReactivity
+
+        /* const p1 = reactive({name:'wangyh',age:18,arr:[2,2,3,5,7]})
 
         console.log(p1);
         effect(()=>{
@@ -25,7 +33,19 @@
         setTimeout(() => {
             p1.arr.splice(4,1)
             console.log(p1.arr);
-        }, 1000);
+        }, 1000); */
+
+        const p = ref(18)
+
+        //console.log(p.value);
+
+        effect(() => {
+            app.innerHTML = 'wyh的年龄是:' + p.value
+        })
+
+        setTimeout(() => {
+            p.value = 22
+        }, 1000)
 
     </script>
 </body>
