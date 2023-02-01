@@ -8,11 +8,20 @@ let activeEffect: Function | undefined;
 let effectStack = []
 
 interface effectOptionType {
-    lazy: boolean,
+    lazy: boolean
     [prop: string]: any
+    scheduler?: Function
 }
 
-export function effect(depens: Function, options = { lazy: false }): Function {
+type effectType = {
+    (...args:any[]);
+    options:effectOptionType
+    id:Number
+    _isEffect:Boolean
+    raw:Function
+}
+
+export function effect(depens: Function, options: effectOptionType = { lazy: false }): effectType {
     const eff = createReactiveEffect(depens, options)
 
     if (!options.lazy) {
@@ -22,7 +31,7 @@ export function effect(depens: Function, options = { lazy: false }): Function {
     return eff
 }
 
-function createReactiveEffect(depens: Function, options: effectOptionType): Function {
+function createReactiveEffect(depens: Function, options: effectOptionType): effectType {
     const effect = function reactiveEffect() {
         depens()
         if (effectStack.includes(effect)) {
@@ -134,8 +143,9 @@ export function trigger(target: object, type: 0 | 1, key?: symbol | string, newV
 
     }
 
-    effects.forEach((e: Function) => {
-        e()
+    effects.forEach((e: effectType) => {
+        //如果存在scheduler时就执行scheduler函数
+        e.options.scheduler && typeof e.options.scheduler === 'function' ? e.options.scheduler() : e()
     })
 
 }
